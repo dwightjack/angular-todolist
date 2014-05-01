@@ -1,4 +1,5 @@
 node_modules
+server/db/*.db
 www/vendor
 www/stylesheets/*.css
 .idea

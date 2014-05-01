@@ -46,7 +46,12 @@ module.exports = function(grunt) {
 				hostname: '*',
 				//port: 80,
 				base: '<%= paths.www %>',
-				livereload: true
+				livereload: true,
+				middleware: function(connect, options, middlewares) {
+					middlewares.push(require('./server'));
+					return middlewares;
+				}
+
 			},
 			server: {}
 		},
