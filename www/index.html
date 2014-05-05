@@ -11,7 +11,7 @@
 	<script src="/vendor/modernizr/modernizr.js"></script>
 
 </head>
-<body>
+<body ng-cloak="">
 
 
 	<div class="container">
@@ -46,28 +46,29 @@
 			<header class="panel-heading">
 				<strong class="h2">Todo List</strong>
 				<div class="pull-right">
-					<button class="btn btn-default"><small class="glyphicon glyphicon-plus"></small> Aggiungi</button>
+					<button class="btn btn-default" type="button" ng-click="toggleForm()"><small class="glyphicon glyphicon-plus"></small> Aggiungi</button>
 				</div>
 			</header>
 
-			<div class="panel-body hide">
+			<div class="panel-body" ng-class="{'hide': !isFormVisible()}">
 
-				<form action="" class="row">
+				<form action="" name="todoForm" class="row" ng-controller="FormController" ng-submit="submitForm()" novalidate="true">
 
 
 					<fieldset class="col-xs-offset-1 col-xs-11">
 
-						<div class="form-group">
+						<div class="form-group" ng-class="{'has-error': isInvalid('title')}">
 							<label for="title" class="sr-only">Titolo</label>
-							<input type="text" class="form-control" id="title" name="title" placeholder="Titolo nuovo task"/>
+							<input type="text" class="form-control" id="title" name="title" ng-model="todo.title" placeholder="Titolo nuovo task (obbligatorio)" required="true" />
+							<div class="help-block" ng-show="isInvalid('title')">Inserisci il titolo del task</div>
 						</div>
 
 						<div class="form-group">
 							<label for="description" class="sr-only">Descrizione</label>
-							<textarea class="form-control" name="description" id="description" cols="30" rows="2" placeholder="Descrizione del task"></textarea>
+							<textarea class="form-control" name="description" id="description" cols="30" rows="2" ng-model="todo.description" placeholder="Descrizione del task"></textarea>
 						</div>
 
-						<button class="btn btn-primary" type="submit"><small class="glyphicon glyphicon-floppy-disk"></small> Salva</button>
+						<button class="btn btn-primary" type="submit" ng-disabled="todoForm.$invalid || isSubmitting()"><small class="glyphicon glyphicon-floppy-disk"></small> Salva</button>
 
 					</fieldset>
 
@@ -75,27 +76,27 @@
 
 			</div>
 
-			<div class="list-group" id="todolist-items">
-				<form action="">
+			<div class="list-group" id="todolist-items" ng-controller="ListController">
+				<form action="" name="todoListForm">
 
-					<article class="list-group-item todo-completed">
+					<article class="list-group-item" ng-repeat="todo in todos" ng-class="{'todo-completed': todo.completed}">
 						<div class="action-bar">
-							<a href="#" class="glyphicon glyphicon-trash" title="Cancella"><span class="sr-only">Cancella</span></a>
+							<a href="" class="glyphicon glyphicon-trash" title="Cancella" ng-click="remove(todo)"><span class="sr-only">Cancella</span></a>
 						</div>
 						<div class="row">
 							<div class="col-xs-12 col-sm-1">
 								<div class="checkbox">
-									<input type="checkbox" value="" name="completed" id="completed" checked="checked" />
+									<input type="checkbox" value="" name="completed" id="completed" ng-checked="todo.completed" ng-click="toggleCompleted(todo)" />
 									<label for="completed" class="sr-only">Completato</label>
 								</div>
 							</div>
 							<div class="col-xs-12 col-sm-11" class="todo-item">
-								<h1 class="list-group-item-heading h4">Titolo</h1>
+								<h1 class="list-group-item-heading h4">{{todo.title}}</h1>
 								<p>
-									<a href="#" class="small">dettagli <span class="caret caret-reverse"></span></a>
+									<a href="" class="small" ng-click="toggleDescription(todo)">dettagli <span class="caret" ng-class="{'caret-reverse': todo.expanded}"></span></a>
 								</p>
-								<p class="list-group-item-text">
-									Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aspernatur beatae cumque deleniti deserunt eos eum excepturi illo minima, nesciunt non nulla perspiciatis porro possimus quae quos sunt temporibus ut.
+								<p class="list-group-item-text" ng-class="todo.expanded ? '' : 'hide'">
+									{{todo.description}}
 								</p>
 							</div>
 						</div>
@@ -106,9 +107,9 @@
 
 
 			<footer class="panel-footer">
-				<p class="small">Totali: <strong>100</strong> Completati: <strong>60</strong></p>
+				<p class="small">Totali: <strong>{{getTotal()}}</strong> Completati: <strong>{{getCompleted()}}</strong></p>
 				<div class="progress">
-					<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+					<div class="progress-bar" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
 						60%
 					</div>
 				</div>
@@ -122,7 +123,10 @@
 	<script src="/vendor/angular/angular.js"></script>
 	<script src="/javascripts/config.js"></script>
 	<script src="/javascripts/services/todo.js"></script>
+	<script src="/javascripts/services/state.js"></script>
 	<script src="/javascripts/controllers/main.js"></script>
+	<script src="/javascripts/controllers/form.js"></script>
+	<script src="/javascripts/controllers/list.js"></script>
 
 </body>
 </html>
