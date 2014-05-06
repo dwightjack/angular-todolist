@@ -12,8 +12,8 @@ angular.module('todoListApp')
 		};
 
 		$scope.toggleCompleted = function (todo) {
-			todo.completed = !todo.completed;
-			todoService.update(todo);
+			//todo.completed = !todo.completed;
+			todoService.update(todo._id, {completed: !todo.completed});
 		};
 
 		$scope.remove = function (todo) {

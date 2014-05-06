@@ -21,9 +21,16 @@ describe('Progress directive tests', function() {
 
 		$scope.progress = 60;
 
-		var element = $compile('<my-progress="progress"></a-great-eye>')($scope);
+		var element = $compile('<div my-progress="progress">{{progress}}%</div>')($scope);
 
-		expect(element.html()).toContain('60');
+		element.scope().$apply();
+
+		var child = angular.element(element.find('div')[0]);
+
+		expect(element.attr('class')).toContain('progress');
+		expect(child.attr('class')).toContain('progress-bar');
+		expect(child.css('width')).toBe('60%');
+		expect(child.text()).toBe('60%');
 
 	});
 });

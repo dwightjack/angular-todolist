@@ -4,7 +4,7 @@ angular.module('todoListApp')
 		var _todos = [];
 
 		//mocking some default todos
-		_todos = [{
+		/*_todos = [{
 			_id: 1,
 			title: 'test title',
 			description: 'test description',
@@ -23,7 +23,7 @@ angular.module('todoListApp')
 			description: 'test description 3',
 			completed: true,
 			date: +(new Date()) + 1
-		}];
+		}];*/
 
 		return {
 			getAll: function () {
@@ -34,7 +34,11 @@ angular.module('todoListApp')
 				return _todos;
 			},
 
-			store: function (todo) {
+			store: function (params) {
+				var todo = angular.extend({}, params);
+				if (!todo._id) {
+					todo._id = Math.max.apply(null, _todos.map(function (el) { return el._id})) + 1;
+				}
 				_todos.push(todo);
 				return todo;
 			},

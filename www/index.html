@@ -69,7 +69,7 @@
 						</div>
 
 						<button class="btn btn-primary" type="submit" ng-disabled="todoForm.$invalid || isSubmitting()"><small class="glyphicon glyphicon-floppy-disk"></small> Salva</button>
-
+						<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-show="isSubmitting()"></span>
 					</fieldset>
 
 				</form>
@@ -92,7 +92,7 @@
 							</div>
 							<div class="col-xs-12 col-sm-11" class="todo-item">
 								<h1 class="list-group-item-heading h4">{{todo.title}}</h1>
-								<p>
+								<p ng-show="todo.description">
 									<a href="" class="small" ng-click="toggleDescription(todo)">dettagli <span class="caret" ng-class="{'caret-reverse': todo.expanded}"></span></a>
 								</p>
 								<p class="list-group-item-text" ng-class="todo.expanded ? '' : 'hide'">
@@ -108,11 +108,7 @@
 
 			<footer class="panel-footer">
 				<p class="small">Totali: <strong>{{getTotal()}}</strong> Completati: <strong>{{getCompleted()}}</strong></p>
-				<div class="progress">
-					<div class="progress-bar" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-						60%
-					</div>
-				</div>
+				<div my-progress="getCompleted()*100/getTotal()">{{getCompleted()*100/getTotal() | number:2}}%</div>
 			</footer>
 
 		</section> <!-- /#todolist -->
@@ -124,6 +120,7 @@
 	<script src="/javascripts/config.js"></script>
 	<script src="/javascripts/services/todo.js"></script>
 	<script src="/javascripts/services/state.js"></script>
+	<script src="/javascripts/directives/progress.js"></script>
 	<script src="/javascripts/controllers/main.js"></script>
 	<script src="/javascripts/controllers/form.js"></script>
 	<script src="/javascripts/controllers/list.js"></script>

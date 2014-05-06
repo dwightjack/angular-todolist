@@ -36,18 +36,21 @@ describe('ListController tests', function() {
 	it('should have a method to toggle complete state on a todo item', function () {
 
 		var todo = {
+			_id: 1,
 			'title': 'test title',
 			'description': 'test description',
 			'completed': false
 		};
 
+		todoService.store(todo);
 
-		spyOn(todoService, 'update');
+
+		spyOn(todoService, 'update').andCallThrough();
 
 		$scope.toggleCompleted(todo);
 
 		expect(todo.completed).toBe(true);
-		expect(todoService.update).toHaveBeenCalledWith(todo);
+		expect(todoService.update).toHaveBeenCalledWith(1, jasmine.any(Object));
 
 	});
 
