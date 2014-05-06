@@ -3,6 +3,10 @@ angular.module('todoListApp')
 
 		$scope.todos = todoService.getAll();
 
+		if ($scope.todos.length === 0) {
+			todoService.load();
+		}
+
 		$scope.toggleDescription = function (todo) {
 			if (!todo.hasOwnProperty('expanded')) {
 				todo.expanded = true;

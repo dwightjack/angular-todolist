@@ -1,6 +1,6 @@
 /*global beforeEach, afterEach, describe, expect, it, spyOn, xdescribe, xit, inject, module */
 describe('todoService tests', function() {
-	var todoService;
+	var todoService, $httpBackend;
 
 	beforeEach(function() {
 
@@ -8,6 +8,7 @@ describe('todoService tests', function() {
 
 		inject(function($injector) {
 			todoService = $injector.get('todoService');
+			$httpBackend = $injector.get('$httpBackend');
 			//force todo reset
 			todoService.reset();
 		});
@@ -27,7 +28,6 @@ describe('todoService tests', function() {
 		}];
 
 		angular.forEach(todos, todoService.store);
-
 		expect(todoService.get(2).title).toBe(todos[1].title);
 
 	});
@@ -39,15 +39,23 @@ describe('todoService tests', function() {
 	it('should have a .store() method which returns the rewly added element', function() {
 		var toAdd = {title: 'A todo item'};
 
+		$httpBackend.expectPOST('/api/todos', toAdd).respond({error: false, body: toAdd});
 		todoService.store(toAdd);
+		$httpBackend.flush();
 
 		expect(todoService.getAll().length).toBe(1);
 		expect(todoService.getAll()[0]).toEqual(toAdd);
 
+
+
 	});
 
 	it('should have a .reset() method to clean up the todo array', function () {
-		todoService.store({title: 'another test'});
+		var toAdd = {title: 'another test'};
+
+		$httpBackend.expectPOST('/api/todos', toAdd).respond({error: false, body: toAdd});
+		todoService.store(toAdd);
+		$httpBackend.flush();
 
 		expect(todoService.getAll().length).toBeGreaterThan(0);
 
@@ -75,7 +83,25 @@ describe('todoService tests', function() {
 
 	});
 
-	//it('should have a .load() method to load elements');
+	it('should have a .load() method to load elements', function () {
+		var todos = [{
+			_id: 1,
+			title: 'title',
+			description: 'description'
+		}, {
+			_id: 1,
+			title: 'title',
+			description: 'description'
+		}];
+
+		$httpBackend.expectGET('/api/todos').respond({error: false, body: todos});
+
+		//angular.forEach(todos, todoService.store);
+		todoService.load();
+		$httpBackend.flush();
+
+		expect(todoService.getAll().length).toBe(2);
+	});
 
 	//it('should have a method to update a todo on the server');
 

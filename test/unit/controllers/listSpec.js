@@ -49,7 +49,6 @@ describe('ListController tests', function() {
 
 		$scope.toggleCompleted(todo);
 
-		expect(todo.completed).toBe(true);
 		expect(todoService.update).toHaveBeenCalledWith(1, jasmine.any(Object));
 
 	});

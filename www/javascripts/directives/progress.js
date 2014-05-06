@@ -11,6 +11,9 @@ angular.module('todoListApp')
 				var progressbar = angular.element(element.find('div')[0]);
 
 				scope.$watch(attrs.myProgress, function (newValue) {
+					if (!angular.isNumber(newValue) || isNaN(newValue)) {
+						newValue = 0;
+					}
 					progressbar
 						.css('width', newValue + '%')
 						.attr('aria-valuenow', parseInt(newValue));

@@ -49,7 +49,7 @@ app.put('/api/todos/:id', function (req, res) {
 	if (!id) {
 		responseCallback(res, 'No ID specified', null);
 	} else {
-		todoDB.update({ _id: id }, req.body, responseCallback.bind(null, res));
+		todoDB.update({ _id: id }, {$set: req.body}, responseCallback.bind(null, res));
 		todoDB.persistence.compactDatafile();
 	}
 });

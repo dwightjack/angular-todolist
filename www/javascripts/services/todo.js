@@ -1,7 +1,13 @@
 angular.module('todoListApp')
-	.factory('todoService', function () {
+	.factory('todoService', ['$resource', function ($resource) {
 
 		var _todos = [];
+
+		var todoRes = $resource('/api/todos/:id', {
+			id: '@_id'
+		}, {
+			update: { method: 'PUT' }
+		});
 
 		//mocking some default todos
 		/*_todos = [{
@@ -31,16 +37,23 @@ angular.module('todoListApp')
 			},
 
 			load: function () {
+				todoRes.get(function (data) {
+					_todos.push.apply(_todos, data.body);
+				});
 				return _todos;
 			},
 
 			store: function (params) {
-				var todo = angular.extend({}, params);
+				/*var todo = angular.extend({}, params);
 				if (!todo._id) {
 					todo._id = Math.max.apply(null, _todos.map(function (el) { return el._id})) + 1;
 				}
-				_todos.push(todo);
-				return todo;
+				_todos.push(todo);*/
+				todoRes.save({}, params, function (data) {
+					if (!data.error) {
+						_todos.push(data.body);
+					}
+				});
 			},
 
 			reset: function () {
@@ -61,8 +74,12 @@ angular.module('todoListApp')
 
 			update: function (id, data) {
 				var todo = this.get(id);
-				angular.extend(todo, data || {});
-				return todo;
+
+				todoRes.update({id: id}, data, function () {
+					angular.extend(todo, data || {});
+				});
+
+				//angular.extend(todo, data || {});
 			},
 
 			remove: function (id) {
@@ -77,7 +94,9 @@ angular.module('todoListApp')
 					}
 				});
 				if (angular.isNumber(idx)) {
-					_todos.splice(idx, 1);
+					todoRes.delete({id: id}, function () {
+						_todos.splice(idx, 1);
+					});
 				}
 			},
 
@@ -88,4 +107,4 @@ angular.module('todoListApp')
 			}
 		};
 
-	});
+	}]);
