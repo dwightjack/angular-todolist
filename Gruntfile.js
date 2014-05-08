@@ -65,10 +65,10 @@ module.exports = function(grunt) {
 				files: ['<%= paths.less %>/**/*.less'],
 				tasks: ['less']
 			},
-			karma: {
-				files: ['<%= paths.js %>/**/*.js', '<%= paths.test %>/unit/**/*.js'],
-				tasks: ['karma:unit:run'] //NOTE the :run flag
-			},
+			// karma: {
+			// 	files: ['<%= paths.js %>/**/*.js', '<%= paths.test %>/unit/**/*.js'],
+			// 	tasks: ['karma:unit:run'] //NOTE the :run flag
+			// },
 			livereload: {
 				options: {
 					livereload: true
@@ -97,6 +97,6 @@ module.exports = function(grunt) {
 	});
 
 	// Default task(s).
-	grunt.registerTask('default', ['less', 'connect:server', 'karma:unit:start', 'watch']);
+	grunt.registerTask('default', ['less', 'connect:server', 'watch']);
 
 };
