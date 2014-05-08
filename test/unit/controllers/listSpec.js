@@ -9,7 +9,6 @@ describe('ListController tests', function() {
 		inject(function($injector) {
 			$rootScope = $injector.get('$rootScope');
 			$controller = $injector.get('$controller');
-			state = $injector.get('state');
 			todoService = $injector.get('todoService');
 
 
@@ -20,7 +19,6 @@ describe('ListController tests', function() {
 
 			ctrl = $controller('ListController', {
 				'$scope': $scope,
-				'state': state,
 				'todoService': todoService
 			});
 		});

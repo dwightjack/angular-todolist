@@ -1,5 +1,5 @@
 angular.module('todoListApp')
-	.controller('ListController', ['$scope', 'state', 'todoService', function ($scope, state, todoService) {
+	.controller('ListController', ['$scope', 'todoService', function ($scope, todoService) {
 
 		$scope.todos = todoService.getAll();
 

@@ -27,8 +27,21 @@ describe('todoService tests', function() {
 			'descrition': 'description'
 		}];
 
-		angular.forEach(todos, todoService.store);
-		expect(todoService.get(2).title).toBe(todos[1].title);
+        var storeTodo = function (todo, i) {
+            var t = angular.extend({}, todo);
+            if (t._id) {
+                delete t._id;
+            }
+            $httpBackend.expectPOST('/api/todos', t).respond({error: false, body: todos[i]});
+            todoService.store(t);
+            $httpBackend.flush();
+        };
+
+		angular.forEach(todos, storeTodo);
+
+        var testTodo = todoService.getAll()[1];
+
+		expect(todoService.get(testTodo._id).title).toBe(testTodo.title);
 
 	});
 
@@ -36,15 +49,17 @@ describe('todoService tests', function() {
 		expect(angular.isArray(todoService.getAll())).toBe(true);
 	});
 
-	it('should have a .store() method which returns the rewly added element', function() {
+	it('should have a .store() method providing a callback with `success` and `storedTodo` arguments', function() {
 		var toAdd = {title: 'A todo item'};
+        var storeSpy = jasmine.createSpy('storeSpy');
 
 		$httpBackend.expectPOST('/api/todos', toAdd).respond({error: false, body: toAdd});
-		todoService.store(toAdd);
+		todoService.store(toAdd, storeSpy);
 		$httpBackend.flush();
 
 		expect(todoService.getAll().length).toBe(1);
 		expect(todoService.getAll()[0]).toEqual(toAdd);
+        expect(storeSpy).toHaveBeenCalledWith(false, toAdd);
 
 
 
@@ -71,13 +86,24 @@ describe('todoService tests', function() {
 			description: 'description',
 			completed: true
 		}, {
-			_id: 1,
+			_id: 2,
 			title: 'title',
 			description: 'description',
 			completed: false
 		}];
 
-		angular.forEach(todos, todoService.store);
+
+        var storeTodo = function (todo, i) {
+            var t = angular.extend({}, todo);
+            if (t._id) {
+                delete t._id;
+            }
+            $httpBackend.expectPOST('/api/todos', t).respond({error: false, body: todos[i]});
+            todoService.store(t);
+            $httpBackend.flush();
+        };
+
+		angular.forEach(todos, storeTodo);
 
 		expect(todoService.getCompleted()).toBe(1);
 

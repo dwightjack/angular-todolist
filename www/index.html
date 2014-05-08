@@ -16,41 +16,12 @@
 
 	<div class="container">
 
-
-		<!-- <section class="panel panel-default">
-			<header class="panel-heading">
-				Aggiungi Task
-			</header>
-			<div class="panel-body">
-
-				<form action="">
-
-					<div class="form-group">
-						<label for="title">Titolo</label>
-						<input type="text" class="form-control" id="title" name="title" placeholder="Titolo del task"/>
-					</div>
-
-					<div class="form-group">
-						<label for="description">Descrizione</label>
-						<textarea class="form-control" name="description" id="description" cols="30" rows="3"></textarea>
-					</div>
-
-					<button class="btn" type="submit"><span class="glyphicon glyphicon-plus"></span> Aggiungi</button>
-
-				</form>
-
-			</div>
-		</section> -->
-
 		<section class="panel panel-default" id="todolist" ng-controller="MainController">
 			<header class="panel-heading">
 				<strong class="h2">Todo List</strong>
-				<div class="pull-right">
-					<button class="btn btn-default" type="button" ng-click="toggleForm()"><small class="glyphicon glyphicon-plus"></small> Aggiungi</button>
-				</div>
 			</header>
 
-			<div class="panel-body" ng-class="{'hide': !isFormVisible()}">
+			<div class="panel-body">
 
 				<form action="" name="todoForm" class="row" ng-controller="FormController" ng-submit="submitForm()" novalidate="true">
 
@@ -68,8 +39,8 @@
 							<textarea class="form-control" name="description" id="description" cols="30" rows="2" ng-model="todo.description" placeholder="Descrizione del task"></textarea>
 						</div>
 
-						<button class="btn btn-primary" type="submit" ng-disabled="todoForm.$invalid || isSubmitting()"><small class="glyphicon glyphicon-floppy-disk"></small> Salva</button>
-						<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-show="isSubmitting()"></span>
+						<button class="btn btn-primary" type="submit" ng-disabled="todoForm.$invalid || isSubmitting"><small class="glyphicon glyphicon-floppy-disk"></small> Salva</button>
+						<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-show="isSubmitting"></span>
 					</fieldset>
 
 				</form>
@@ -120,7 +91,6 @@
 	<script src="/vendor/angular-resource/angular-resource.js"></script>
 	<script src="/javascripts/config.js"></script>
 	<script src="/javascripts/services/todo.js"></script>
-	<script src="/javascripts/services/state.js"></script>
 	<script src="/javascripts/directives/progress.js"></script>
 	<script src="/javascripts/controllers/main.js"></script>
 	<script src="/javascripts/controllers/form.js"></script>

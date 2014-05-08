@@ -9,11 +9,7 @@ describe('FormController tests', function() {
 		inject(function($injector) {
 			$rootScope = $injector.get('$rootScope');
 			$controller = $injector.get('$controller');
-			state = $injector.get('state');
 			todoService = $injector.get('todoService');
-
-			//force this
-			state.formOpen = false;
 
 			//force todo reset
 			todoService.reset();
@@ -31,7 +27,6 @@ describe('FormController tests', function() {
 
 			ctrl = $controller('FormController', {
 				'$scope': $scope,
-				'state': state,
 				'todoService': todoService
 			});
 		});
@@ -66,14 +61,13 @@ describe('FormController tests', function() {
 
 		$scope.submitForm();
 
-		expect(todoService.store).toHaveBeenCalledWith(todo);
+		expect(todoService.store).toHaveBeenCalledWith(todo, jasmine.any(Function));
 
 	});
 
 	it('should have a method to verify submission state', function () {
-		expect(angular.isFunction($scope.isSubmitting)).toBe(true);
-		expect($scope.isSubmitting()).toBe(state.formSubmitting);
-	})
+		expect($scope.isSubmitting).toBeDefined();
+	});
 
 	it('should have a method to check for errors in fields', function () {
 

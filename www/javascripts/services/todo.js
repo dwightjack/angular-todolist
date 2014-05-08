@@ -43,17 +43,21 @@ angular.module('todoListApp')
 				return _todos;
 			},
 
-			store: function (params) {
+			store: function (params, callback) {
+                var cb = callback || angular.noop;
 				/*var todo = angular.extend({}, params);
 				if (!todo._id) {
 					todo._id = Math.max.apply(null, _todos.map(function (el) { return el._id})) + 1;
 				}
-				_todos.push(todo);*/
+				_todos.push(todo);
+                 cb(false, todo);
+				*/
 				todoRes.save({}, params, function (data) {
-					if (!data.error) {
+                    if (!data.error) {
 						_todos.push(data.body);
 					}
-				});
+                    cb(data.error, data.body);
+                });
 			},
 
 			reset: function () {

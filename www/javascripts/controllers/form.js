@@ -1,16 +1,15 @@
 angular.module('todoListApp')
-	.controller('FormController', ['$scope', 'state', 'todoService', function ($scope, state, todoService) {
+	.controller('FormController', ['$scope', 'todoService', function ($scope, todoService) {
 
-		$scope.isSubmitting = function () {
-			return state.formSubmitting;
-		}
+		$scope.isSubmitting = false;
 
 		$scope.submitForm = function () {
-			state.isFormSubmitting = true;
-			if ($scope.todoForm.$invalid !== true) {
-				todoService.store($scope.todo);
+            if ($scope.todoForm.$invalid !== true) {
+                $scope.isSubmitting = true;
+				todoService.store($scope.todo, function () {
+                    $scope.isSubmitting = false;
+                });
 			}
-			state.isFormSubmitting = false;
 		};
 
 		$scope.isInvalid = function (inputName) {
