@@ -1,16 +1,10 @@
 angular.module('todoListApp')
-	.factory('todoService', ['$resource', function ($resource) {
+	.factory('todoService', [function () {
 
 		var _todos = [];
 
-		var todoRes = $resource('/api/todos/:id', {
-			id: '@_id'
-		}, {
-			update: { method: 'PUT' }
-		});
-
 		//mocking some default todos
-		/*_todos = [{
+		_todos = [{
 			_id: 1,
 			title: 'test title',
 			description: 'test description',
@@ -29,7 +23,7 @@ angular.module('todoListApp')
 			description: 'test description 3',
 			completed: true,
 			date: +(new Date()) + 1
-		}];*/
+		}];
 
 		return {
 			getAll: function () {
@@ -37,27 +31,17 @@ angular.module('todoListApp')
 			},
 
 			load: function () {
-				todoRes.get(function (data) {
-					_todos.push.apply(_todos, data.body);
-				});
 				return _todos;
 			},
 
 			store: function (params, callback) {
                 var cb = callback || angular.noop;
-				/*var todo = angular.extend({}, params);
+				var todo = angular.extend({}, params);
 				if (!todo._id) {
-					todo._id = Math.max.apply(null, _todos.map(function (el) { return el._id})) + 1;
+					todo._id = (_todos.length === 0 ? 0 : Math.max.apply(null, _todos.map(function (el) { return el._id; })) || 0) + 1;
 				}
 				_todos.push(todo);
-                 cb(false, todo);
-				*/
-				todoRes.save({}, params, function (data) {
-                    if (!data.error) {
-						_todos.push(data.body);
-					}
-                    cb(data.error, data.body);
-                });
+                cb(false, todo);
 			},
 
 			reset: function () {
@@ -79,11 +63,7 @@ angular.module('todoListApp')
 			update: function (id, data) {
 				var todo = this.get(id);
 
-				todoRes.update({id: id}, data, function () {
-					angular.extend(todo, data || {});
-				});
-
-				//angular.extend(todo, data || {});
+				angular.extend(todo, data || {});
 			},
 
 			remove: function (id) {
@@ -98,9 +78,7 @@ angular.module('todoListApp')
 					}
 				});
 				if (angular.isNumber(idx)) {
-					todoRes.delete({id: id}, function () {
-						_todos.splice(idx, 1);
-					});
+					_todos.splice(idx, 1);
 				}
 			},
 

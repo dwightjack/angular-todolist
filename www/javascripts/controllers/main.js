@@ -9,5 +9,4 @@ angular.module('todoListApp')
 			return todoService.getCompleted();
 		}
 
-
 	}]);

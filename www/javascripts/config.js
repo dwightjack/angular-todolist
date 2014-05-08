@@ -1,2 +1,2 @@
 //initialize the app
-angular.module('todoListApp', ['ngResource']);
+angular.module('todoListApp', []);

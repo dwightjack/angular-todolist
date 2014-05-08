@@ -1,6 +1,6 @@
-/*global beforeEach, afterEach, describe, expect, it, spyOn, xdescribe, xit, inject, module */
+/*global beforeEach, afterEach, describe, expect, it, spyOn, xdescribe, xit, inject, module, jasmine */
 describe('todoService tests', function() {
-	var todoService, $httpBackend;
+	var todoService;
 
 	beforeEach(function() {
 
@@ -8,7 +8,6 @@ describe('todoService tests', function() {
 
 		inject(function($injector) {
 			todoService = $injector.get('todoService');
-			$httpBackend = $injector.get('$httpBackend');
 			//force todo reset
 			todoService.reset();
 		});
@@ -32,9 +31,7 @@ describe('todoService tests', function() {
             if (t._id) {
                 delete t._id;
             }
-            $httpBackend.expectPOST('/api/todos', t).respond({error: false, body: todos[i]});
             todoService.store(t);
-            $httpBackend.flush();
         };
 
 		angular.forEach(todos, storeTodo);
@@ -50,12 +47,10 @@ describe('todoService tests', function() {
 	});
 
 	it('should have a .store() method providing a callback with `success` and `storedTodo` arguments', function() {
-		var toAdd = {title: 'A todo item'};
+		var toAdd = {title: 'A todo item', _id: 1};
         var storeSpy = jasmine.createSpy('storeSpy');
 
-		$httpBackend.expectPOST('/api/todos', toAdd).respond({error: false, body: toAdd});
 		todoService.store(toAdd, storeSpy);
-		$httpBackend.flush();
 
 		expect(todoService.getAll().length).toBe(1);
 		expect(todoService.getAll()[0]).toEqual(toAdd);
@@ -68,9 +63,7 @@ describe('todoService tests', function() {
 	it('should have a .reset() method to clean up the todo array', function () {
 		var toAdd = {title: 'another test'};
 
-		$httpBackend.expectPOST('/api/todos', toAdd).respond({error: false, body: toAdd});
 		todoService.store(toAdd);
-		$httpBackend.flush();
 
 		expect(todoService.getAll().length).toBeGreaterThan(0);
 
@@ -98,9 +91,7 @@ describe('todoService tests', function() {
             if (t._id) {
                 delete t._id;
             }
-            $httpBackend.expectPOST('/api/todos', t).respond({error: false, body: todos[i]});
             todoService.store(t);
-            $httpBackend.flush();
         };
 
 		angular.forEach(todos, storeTodo);
@@ -120,11 +111,11 @@ describe('todoService tests', function() {
 			description: 'description'
 		}];
 
-		$httpBackend.expectGET('/api/todos').respond({error: false, body: todos});
 
-		//angular.forEach(todos, todoService.store);
+		angular.forEach(todos, function (todo) {
+			todoService.store(todo);
+		});
 		todoService.load();
-		$httpBackend.flush();
 
 		expect(todoService.getAll().length).toBe(2);
 	});
