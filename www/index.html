@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" ng-app="todoListApp">
 <head>
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -14,7 +14,7 @@
 <body>
 
 
-	<div class="container">
+	<div class="container" ng-controller="MainController">
 
 		<section class="panel panel-default" id="todolist">
 			<header class="panel-heading">
@@ -47,27 +47,27 @@
 
 			</div>
 
-			<div class="list-group" id="todolist-items">
+			<div class="list-group" id="todolist-items" ng-controller="ListController">
 				<form action="" name="todoListForm">
 
-					<article class="list-group-item todo-completed">
+					<article class="list-group-item" ng-class="{'todo-completed': todo.completed}" ng-repeat="todo in todos">
 						<div class="action-bar">
-							<a href="" class="glyphicon glyphicon-trash" title="Cancella"><span class="sr-only">Cancella</span></a>
+							<a href="" class="glyphicon glyphicon-trash" title="Cancella" ng-click="removeTodo(todo)"><span class="sr-only">Cancella</span></a>
 						</div>
 						<div class="row">
 							<div class="col-xs-12 col-sm-1">
 								<div class="checkbox">
-									<input type="checkbox" value="" name="completed" id="completed" checked="true" />
+									<input type="checkbox" value="" name="completed" id="completed" ng-checked="todo.completed" ng-click="toggleCompleted(todo)" />
 									<label for="completed" class="sr-only">Completato</label>
 								</div>
 							</div>
 							<div class="col-xs-12 col-sm-11" class="todo-item">
-								<h1 class="list-group-item-heading h4">Titolo todo</h1>
+								<h1 class="list-group-item-heading h4">{{todo.title}}</h1>
 								<p>
-									<a href="" class="small">dettagli <span class="caret"></span></a>
+									<a href="" class="small" ng-click="toggleDescription(todo)">dettagli <span class="caret" ng-class="{'caret-reverse' : todo.expanded}"></span></a>
 								</p>
-								<p class="list-group-item-text">
-									Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio, rerum, facilis sed ullam aut porro magnam!
+								<p class="list-group-item-text" ng-class="todo.expanded ? '': 'hide'">
+									{{todo.description}}
 								</p>
 							</div>
 						</div>
@@ -78,15 +78,21 @@
 
 
 			<footer class="panel-footer">
-				<p class="small">Totali: <strong>3</strong> Completati: <strong>1</strong></p>
+				<p class="small">Totali: <strong>{{todos.length}}</strong> Completati: <strong>{{getCompleted()}}</strong></p>
 				<div class="progress">
-					<div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="33" style="width: 33%">33%</div>
+					<div my-progress="getCompletedPerc()">{{getCompletedPerc() | number:1}}%</div>
 				</div>
 			</footer>
 
 		</section> <!-- /#todolist -->
 
 	</div>
+
+	<script src="/vendor/angular/angular.js"></script>
+	<script src="/javascripts/config.js"></script>
+	<script src="/javascripts/controllers/main.js"></script> 
+	<script src="/javascripts/controllers/list.js"></script> 
+	<script src="/javascripts/directives/progress.js"></script> 
 
 </body>
 </html>
